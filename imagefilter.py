@@ -19,7 +19,7 @@ def main():
         for y in range(height):
             # get the rgb values of a pixel at a certain coordinate
             r, g, b = image.getpixel((x, y))
-            new_image.putpixel((x, y), (r, b, g))
+            new_image.putpixel((x, y), (r, g, b))
 
     # open the new image
     new_image.show()
