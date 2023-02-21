@@ -24,14 +24,17 @@ def flip_image():
 def shrink_image(image):
     # get the height and width
     width, height = image.size
+
+    # Divide width and height of new image by 2 and subtract last row and column if width/height is odd numbered
     new_width = int((width / 2) - (width % 2))
     new_height = int((height / 2) - (height % 2))
 
     # create a new image of half the size as the original
     shrinked_image = Image.new("RGB", (new_width, new_height), "white")
-    
-    # (height - (height % 2))
-    # (width - (width % 2))
+
+    # coordinate points for where to place pixel in new image
+    new_x = 0
+    new_y = 0
 
     for x in range(0, width, 2):
         for y in range(0, height, 2):
@@ -47,7 +50,15 @@ def shrink_image(image):
             avg_b = int((b1 + b2 + b3 + b4) / 4)
 
             # put average rgb into the pixel
-            shrinked_image.putpixel((x, y), (avg_r, avg_g, avg_b))
+            shrinked_image.putpixel((new_x, new_y), (avg_r, avg_g, avg_b))
+
+            # move to next row
+            new_y += 1
+        # move to next column
+        new_x += 1
+
+        # move back to first row
+        new_y = 0
 
     # open the new image
     shrinked_image.show()
