@@ -9,27 +9,79 @@ def main():
     # Show image
     image.show()
 
-    width, height = image.size
-    new_image = Image.new("RGB", (image.size), "white")
-
-    if sys.argv[1] == "flip_image":
-        flip_image(image, width, height, new_image)
+    if sys.argv[1] == "grayscale":
+        grayscale(image)
+    elif sys.argv[1] == "rgb_scale":
+        rgb_scale(image)
+    elif sys.argv[1] == "flip_image":
+        flip_image(image)
     elif sys.argv[1] == "shrink_image":
         shrink_image(image)
     elif sys.argv[1] == "hide_image":
         hide_image(image)
 
 
-def flip_image(image, width, height, new_image):
+def rgb_scale(image):
+    # get the height and width
+    width, height = image.size
+
+    # create a new image of the same size as the original
+    new_image = Image.new("RGB", (image.size), "white")
+
+    # place a pixel from the original image into the new image
+    for x in range(width):
+        for y in range(height):
+            # get the rgb values of a pixel at a certain coordinate
+            r, g, b = image.getpixel((x, y))
+            new_image.putpixel((x, y), (r, g, b))
+
+    # open the new image
+    new_image.show()
+
+
+def grayscale(image):
+    # get the height and width
+    width, height = image.size
+
+    # create a new image of the same size as the original
+    grayscale_image = Image.new("RGB", (image.size), "white")
+
+    # Initializes formulas and prompts user
+    print("Algorithm 1: gray = (r + g + b) / 3 ")
+    print("Algorithm 2: gray = (0.2989 * r) + (0.5870 * g) + (0.1140 * b)")
+    print()
+    alt_formula = input("Use algorithm 1 or 2? Type '1' or '2': ")
+
+    # place a pixel from the original image into the new image
+    for x in range(width):
+        for y in range(height):
+            # get the rgb values of a pixel at a certain coordinate
+            r, g, b = image.getpixel((x, y))
+            if alt_formula == "1":
+                gray = int((r + g + b)/3)
+                grayscale_image.putpixel((x, y), (gray, gray, gray))
+            elif alt_formula == "2":
+                gray = int((0.2989 * r) + (0.5870 * g) + (0.1140 * b))
+                grayscale_image.putpixel((x, y), (gray, gray, gray))
+
+    # open the new image
+    grayscale_image.show()
+
+
+def flip_image(image):
+    # Created by Matthew
+
+    # get the height and width
+    width, height = image.size
     t = []
     a = 0
     for x in range(width):
         t.append(image.getpixel(x, 0))
-        
-
 
 
 def shrink_image(image):
+    # Created by David
+
     # get the height and width
     width, height = image.size
 
@@ -73,7 +125,117 @@ def shrink_image(image):
 
 
 def hide_image(image):
-    pass
+    # # Created by Matthew and David
+
+    # get the height and width
+    width, height = image.size
+
+    # create a new image of the same size as the original
+    hidden_image = Image.new("RGB", (image.size), "white")
+
+    # ask user whether they want message or image
+    hide_type = input("Hide message or image? ")
+    if hide_type == "message":
+        # asks user for message to be hidden in image
+        message = input("Enter your desired message: ")
+
+        # divides message into array
+        divided_message = []
+        for char in message:
+            divided_message.append(char)
+
+        for x in range(width):
+            for y in range(height):
+                for letter in divided_message:
+                    # get the rgb values of a pixel at a certain coordinate
+                    r, g, b = image.getpixel((x, y))
+
+                    # take first three binary values of r and g values, and take first two of b value
+                    # 8 pixels total will be used for modification
+                    r = (bin(r)[2:5])
+                    g = (bin(g)[2:5])
+                    b = (bin(b)[2:4])
+
+                    # turn message into integer values corresponding to ASCII chart
+                    ints = ord(letter)
+
+                    # turn ints to binary
+                    binary = bin(ints)
+
+                    # spilt binary message into three parts and add each to corresponding rgb value
+                    r_bin_val = ((binary)[2:5])
+                    g_bin_val = ((binary)[5:8])
+                    b_bin_val = ((binary)[8:10])
+
+                    # creates new rgb values with message values
+                    new_r = int(r + r_bin_val)
+                    new_g = int(g + g_bin_val)
+                    new_b = int(b + b_bin_val)
+
+                    # adds new pixels to hidden image
+                    hidden_image.putpixel((x, y), (new_r, new_g, new_b))
+
+                    # 
+                    if letter == divided_message[-1]:
+                        for x in range(width):
+                            for y in range(height):
+                                r, g, b = image.getpixel((x, y))
+                                hidden_image.putpixel((x, y), (r, g, b))
+        
+                        # open the new image
+                        hidden_image.show()
+                        sys.exit()
+
+    if hide_type == "image":
+        choices = ["buster.png", "hyena.jpg", "jump.jpeg", "kitty.png", "latestart.jpg", "nightbee.png", "owlbear.jpg", "philip.jpg", 
+                   "thanksgiving.jpg"]
+        print(choices)
+        image_choice = input("Choose an image: ")
+        
+        second_hidden_image = Image.open(image_choice)
+        second_width, second_height = second_hidden_image.size
+
+        new_x = 0
+        new_y = 0
+
+        for x in range(width):
+            for y in range(height):
+                for new_x in range(second_width):
+                    for new_y in range(second_height):
+                        # get the rgb values of a pixel at a certain coordinate
+                        r1, g1, b1 = image.getpixel((x, y))
+
+                        # take first three binary values of r and g values, and take first two of b value
+                        # 8 pixels total will be used for modification
+                        r1 = (bin(r1)[2:6])
+                        g1 = (bin(g1)[2:6])
+                        b1 = (bin(b1)[2:6])
+
+                        r2, g2, b2 = second_hidden_image.getpixel((new_x, new_y))
+                            
+                        # takes first four binary values of r and g values, and takes first three of b value
+                        # 8 pixels total will be used for modification
+                        r2 = (bin(r2)[2:6])
+                        g2 = (bin(g2)[2:6])
+                        b2 = (bin(b2)[2:6])
+
+                        # creates new rgb values with message values
+                        new_r2 = int(r1 + r2)
+                        new_g2 = int(g1 + g2)
+                        new_b2 = int(b1 + b2)
+
+                        # adds new pixels to hidden image
+                        hidden_image.putpixel((x, y), (new_r2, new_g2, new_b2))
+
+                        if str(new_x) == (str(second_width)[-1]) and str(new_y) == (str(second_height)[-1]):
+                            for x in range(width):
+                                for y in range(height):
+                                    r, g, b, = image.getpixel((x, y))
+                                    hidden_image.putpixel((x, y), (r, g, b))
+
+                            # open the new image
+                            hidden_image.show()
+                            sys.exit()
 
 
 if __name__ == "__main__":
