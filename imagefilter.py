@@ -125,7 +125,7 @@ def shrink_image(image):
 
 
 def hide_image(image):
-    # # Created by Matthew and David
+    # Created by Matthew and David
 
     # get the height and width
     width, height = image.size
@@ -162,7 +162,7 @@ def hide_image(image):
                     # turn ints to binary
                     binary = bin(ints)
 
-                    # spilt binary message into three parts and add each to corresponding rgb value
+                    # split binary message into three parts and add each to corresponding rgb value
                     r_bin_val = ((binary)[2:5])
                     g_bin_val = ((binary)[5:8])
                     b_bin_val = ((binary)[8:10])
@@ -175,7 +175,7 @@ def hide_image(image):
                     # adds new pixels to hidden image
                     hidden_image.putpixel((x, y), (new_r, new_g, new_b))
 
-                    # 
+                    # if there are no characters left in the message, image won't be further altered from original
                     if letter == divided_message[-1]:
                         for x in range(width):
                             for y in range(height):
@@ -187,6 +187,7 @@ def hide_image(image):
                         sys.exit()
 
     if hide_type == "image":
+        # ask user for which image to pick from list
         choices = ["buster.png", "hyena.jpg", "jump.jpeg", "kitty.png", "latestart.jpg", "nightbee.png", "owlbear.jpg", "philip.jpg", 
                    "thanksgiving.jpg"]
         print(choices)
@@ -202,31 +203,31 @@ def hide_image(image):
             for y in range(height):
                 for new_x in range(second_width):
                     for new_y in range(second_height):
-                        # get the rgb values of a pixel at a certain coordinate
+                        # get the rgb values of a pixel at a certain coordinate at first image
                         r1, g1, b1 = image.getpixel((x, y))
 
-                        # take first three binary values of r and g values, and take first two of b value
-                        # 8 pixels total will be used for modification
+                        # take first four binary values of rgb values from first image
                         r1 = (bin(r1)[2:6])
                         g1 = (bin(g1)[2:6])
                         b1 = (bin(b1)[2:6])
 
+                        # get the rgb values of a pixel at a certain coordinate at second image
                         r2, g2, b2 = second_hidden_image.getpixel((new_x, new_y))
                             
-                        # takes first four binary values of r and g values, and takes first three of b value
-                        # 8 pixels total will be used for modification
+                        # take first four binary values of rgb values from second image
                         r2 = (bin(r2)[2:6])
                         g2 = (bin(g2)[2:6])
                         b2 = (bin(b2)[2:6])
 
-                        # creates new rgb values with message values
+                        # creates new rgb values with first four pixels of first image + first four pixels of second image
                         new_r2 = int(r1 + r2)
                         new_g2 = int(g1 + g2)
                         new_b2 = int(b1 + b2)
 
-                        # adds new pixels to hidden image
+                        # adds first four pixels of second image to first image
                         hidden_image.putpixel((x, y), (new_r2, new_g2, new_b2))
 
+                        # if second image reaches last width or height pixel, image won't be further altered from original
                         if str(new_x) == (str(second_width)[-1]) and str(new_y) == (str(second_height)[-1]):
                             for x in range(width):
                                 for y in range(height):
