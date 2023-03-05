@@ -2,6 +2,9 @@
 from PIL import Image
 import sys
 
+# PASS IN COMMAND LINE ARGUMENT TO RUN MODULES
+# "rgb_scale", "grayscale", "flip_image", "shrink_image", and "hide_image" are the options
+
 def main():
     # Open image
     image = Image.open('horse.jpg')
@@ -10,7 +13,14 @@ def main():
     image.show()
 
     if sys.argv[1] == "grayscale":
-        grayscale(image)
+        # Initializes formulas and prompts user
+        print("Algorithm 1: gray = (r + g + b) / 3 ")
+        print("Algorithm 2: gray = (0.2989 * r) + (0.5870 * g) + (0.1140 * b)")
+        print()
+        alt_formula = input("Use algorithm 1 or 2? Type '1' or '2': ")
+
+        grayscale(image, alt_formula)
+
     elif sys.argv[1] == "rgb_scale":
         rgb_scale(image)
     elif sys.argv[1] == "flip_image":
@@ -39,18 +49,12 @@ def rgb_scale(image):
     new_image.show()
 
 
-def grayscale(image):
+def grayscale(image, alt_formula):
     # get the height and width
     width, height = image.size
 
     # create a new image of the same size as the original
     grayscale_image = Image.new("RGB", (image.size), "white")
-
-    # Initializes formulas and prompts user
-    print("Algorithm 1: gray = (r + g + b) / 3 ")
-    print("Algorithm 2: gray = (0.2989 * r) + (0.5870 * g) + (0.1140 * b)")
-    print()
-    alt_formula = input("Use algorithm 1 or 2? Type '1' or '2': ")
 
     # place a pixel from the original image into the new image
     for x in range(width):
