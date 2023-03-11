@@ -75,7 +75,6 @@ def grayscale(image, alt_formula):
 def flip_image(image):
     # Created by Matthew
 
-    # get the height and width
     if sys.argv[2] == "horizontal":
         horizontal = image.transpose(Image.FLIP_LEFT_RIGHT)
         horizontal.show()
